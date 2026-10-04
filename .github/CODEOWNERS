@@ -1,0 +1,8 @@
+# Default ownership for repository changes.
+# Security-sensitive changes should be reviewed by the repository owner/maintainer.
+/* @FaisalBasit
+/.github/ @FaisalBasit
+/docs/security.md @FaisalBasit
+/docs/ai-security.md @FaisalBasit
+/docs/supply-chain.md @FaisalBasit
+/templates/security/ @FaisalBasit
