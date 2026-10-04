@@ -18,4 +18,13 @@ Reference: https://github.com/imbue-ai/blueprint
 
 ## Important
 
-External skills are inputs to the methodology, not substitutes for project-specific requirements, human review, testing, or security verification.
+External skills are inputs to the methodology, not substitutes for:
+
+- project-specific requirements
+- human architectural decisions
+- testing
+- security verification
+- risk acceptance
+- release approval
+
+External tools and instructions change over time. Consuming projects should verify installation instructions and tool versions against the upstream source before adoption.
