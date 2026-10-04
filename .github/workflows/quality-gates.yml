@@ -21,14 +21,29 @@ jobs:
           set -euo pipefail
           required=(
             README.md
+            SECURITY.md
+            CONTRIBUTING.md
+            CHANGELOG.md
             docs/standard.md
             docs/workflow.md
             docs/testing.md
             docs/security.md
             docs/frontend-backend-contracts.md
             docs/ai-agent-contract.md
-            docs/threat-model.md
+            docs/ai-security.md
+            docs/governance.md
+            docs/risk-classification.md
+            docs/traceability.md
+            docs/supply-chain.md
+            docs/assurance.md
+            docs/definition-of-ready-done.md
+            docs/framework-mapping.md
+            docs/versioning.md
             templates/spec/README.md
+            templates/traceability-matrix.md
+            templates/risk/risk-register.md
+            templates/security/asvs-verification.md
+            templates/evidence/release-evidence.md
           )
           for file in "${required[@]}"; do
             test -s "$file" || { echo "Missing or empty required file: $file"; exit 1; }
@@ -43,14 +58,25 @@ jobs:
             exit 1
           fi
 
-      - name: Semgrep
-        uses: semgrep/semgrep-action@v1
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-        continue-on-error: false
+      - name: Check for accidentally committed private-key material
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git grep -nE -- '-----BEGIN (RSA|OPENSSH|EC|DSA|PRIVATE) KEY-----' -- .; then
+            echo "Potential private key detected."
+            exit 1
+          fi
+
+      - name: Semgrep Community Edition
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check semgrep
+          semgrep scan --config auto --error .
 
   codeql:
     name: CodeQL
+    if: ${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.py', '**/*.go', '**/*.java', '**/*.kt', '**/*.c', '**/*.cpp', '**/*.cs', '**/*.rb', '**/*.swift') != '' }}
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -63,7 +89,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript-typescript
+          languages: javascript-typescript,python,go,java-kotlin,c-cpp,csharp,ruby,swift
 
       - name: Analyze
         uses: github/codeql-action/analyze@v3
