@@ -23,6 +23,7 @@ jobs:
             README.md
             SECURITY.md
             CONTRIBUTING.md
+            CHANGELOG.md
             docs/standard.md
             docs/workflow.md
             docs/testing.md
@@ -36,6 +37,8 @@ jobs:
             docs/supply-chain.md
             docs/assurance.md
             docs/definition-of-ready-done.md
+            docs/framework-mapping.md
+            docs/versioning.md
             templates/spec/README.md
             templates/traceability-matrix.md
             templates/risk/risk-register.md
@@ -59,7 +62,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git grep -nE '-----BEGIN (RSA|OPENSSH|EC|DSA|PRIVATE) KEY-----' -- .; then
+          if git grep -nE -- '-----BEGIN (RSA|OPENSSH|EC|DSA|PRIVATE) KEY-----' -- .; then
             echo "Potential private key detected."
             exit 1
           fi
@@ -85,7 +88,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript-typescript
+          languages: javascript-typescript,python,go,java-kotlin,c-cpp,csharp,ruby,swift
 
       - name: Analyze
         uses: github/codeql-action/analyze@v3
